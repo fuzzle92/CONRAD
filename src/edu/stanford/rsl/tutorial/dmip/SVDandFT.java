@@ -22,7 +22,7 @@ import ij.ImageJ;
  *
  */
 public class SVDandFT {
-/*	
+
 	public static void invertSVD(SimpleMatrix A)
 	{
 		
@@ -31,6 +31,8 @@ public class SVDandFT {
 		
 		//Compute the inverse of A without using inverse()				
 		//TODO 
+		DecompositionSVD svd = new DecompositionSVD(A);
+		
 		
 		//Check output: re-compute A = U * S * V^T
 		SimpleMatrix temp = SimpleOperators.multiplyMatrixProd(svd.getU(), svd.getS());
@@ -45,9 +47,10 @@ public class SVDandFT {
 		int size = Math.min(Sinv.getCols(), Sinv.getRows());
 		SimpleVector SinvDiag = new SimpleVector( size);
 		
-		//TODO
-		//TODO
-		//TODO
+		for (int i = 0; i < size; i++) {
+			SinvDiag.setElementValue(i, 1.0/svd.getS().getElement(i, i));
+		}
+		
 		
 		Sinv.setDiagValue(SinvDiag);
 		
@@ -62,7 +65,7 @@ public class SVDandFT {
 		System.out.println("A.inverse() = " + A.inverse(InversionType.INVERT_SVD));
 		
 		//Condition number
-		//TODO
+		double cond = SinvDiag.getElement(size-1)/SinvDiag.getElement(0);
 		System.out.println("Cond(A) = " + cond);
 		
 		//introduce a rank deficiency
@@ -72,9 +75,9 @@ public class SVDandFT {
 		for(int i = 0; i < sInd; i++)
 		{
 			double val = svd.getS().getElement(i, i);
-			//TODO
-			//TODO
-			//TODO
+			if(val < eps) {
+				svd.getS().setElementValue(i, i, 0);
+			}
 		}
 		
 		SimpleMatrix templowrank = SimpleOperators.multiplyMatrixProd(svd.getU(), Slowrank);
@@ -426,5 +429,5 @@ public class SVDandFT {
 		
 
 	}
-*/
+
 }
