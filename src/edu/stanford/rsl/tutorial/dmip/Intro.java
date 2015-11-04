@@ -62,14 +62,14 @@ public class Intro {
 		// Load an image from file
 		String filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/mr12.dcm";
 		// TODO. Hint: Use IJ and ImageUtil
-//		Grid2D imageDisk = ImageUtil.wrapImagePlus(IJ.openImage(filename));
-		Grid3D mrImage = ImageUtil.wrapImagePlus(IJ.openImage(filename));
+		// Grid2D imageDisk = ImageUtil.wrapImagePlus(IJ.openImage(filename));
+		Grid2D mrImage = ImageUtil.wrapImagePlus(IJ.openImage(filename)).getSubGrid(0);
 		mrImage.show();
-		Grid2D d2MrImage = mrImage.getSubGrid(0);
-		d2MrImage.show();
+		// Grid2D d2MrImage = mrImage.getSubGrid(0);
+		// d2MrImage.show();
 		// convolution
 		Convolver conv = new Convolver();
-		 FloatProcessor imgProc = ImageUtil.wrapGrid2D(d2MrImage);
+		FloatProcessor imgProc = ImageUtil.wrapGrid2D(mrImage);
 
 		// define the kernel. Try simple averaging 3x3 filter
 		int kw = 3;
@@ -79,10 +79,10 @@ public class Intro {
 			kernel[i] = 1.f / (kw * kh);
 		}
 		conv.convolve(imgProc, kernel, kw, kh);
-		d2MrImage.show();
+		mrImage.show();
 		// write an image to disk, check the supported output formats
 		String outFilename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/mr12out.tif";
-	IJ.save(outFilename);
+		IJ.save(outFilename);
 	}
 
 	public static void signalIntro() {
@@ -93,7 +93,7 @@ public class Intro {
 		double[] y = new double[plotLength];
 
 		for (int i = 0; i < y.length; i++) {
-			y[i] = Math.sin(2*Math.PI*i*stepSize);
+			y[i] = Math.sin(2 * Math.PI * i * stepSize);
 		}
 
 		VisualizationUtil.createPlot(y).show();
@@ -199,9 +199,9 @@ public class Intro {
 		System.out.println("vRand.ceil()  = " + vRand.toString());
 
 		// min, max, mean
-		 double minV1 = v1.min();
-		 double maxV1 = v1.max();
-		 System.out.println("Min(v1) = " + minV1 + " Max(v1) = " + maxV1);
+		double minV1 = v1.min();
+		double maxV1 = v1.max();
+		System.out.println("Min(v1) = " + minV1 + " Max(v1) = " + maxV1);
 
 		// for matrices: iterate over row or column vectors
 		SimpleVector maxVec = new SimpleVector(M.getCols());
@@ -240,17 +240,15 @@ public class Intro {
 		System.out.println("Condition number of A: " + A.conditionNumber(MatrixNormType.MAT_NORM_L1));
 
 		// Re-compute A = U * S * V^T
-		 SimpleMatrix temp = SimpleOperators.multiplyMatrixProd(svd.getU(),
-		 svd.getS());
-		 SimpleMatrix A2 = SimpleOperators.multiplyMatrixProd(temp,
-		 svd.getV().transposed());
-		 System.out.println("U * S * V^T: " + A2.toString());
+		SimpleMatrix temp = SimpleOperators.multiplyMatrixProd(svd.getU(), svd.getS());
+		SimpleMatrix A2 = SimpleOperators.multiplyMatrixProd(temp, svd.getV().transposed());
+		System.out.println("U * S * V^T: " + A2.toString());
 
 	}
 
 	public static void main(String arg[]) {
 		basicIntro();
-		 gridIntro();
-		 signalIntro();
+		gridIntro();
+		signalIntro();
 	}
 }

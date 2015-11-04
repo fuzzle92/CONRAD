@@ -28,18 +28,18 @@ public class ImageUndistortion{
 		
 		// TODO : adapt the paths
 		int caseNo = 0;
-		String filename = "C:/StanfordRepo/CONRAD/src/edu/stanford/rsl/tutorial/dmip/frame32.jpg";
+		String filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/frame32.jpg";
 		
 		if(caseNo == 0)
 		{
-			filename = "C:/StanfordRepo/CONRAD/src/edu/stanford/rsl/tutorial/dmip/frame32.jpg";
+			filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/frame32.jpg";
 		}
 		else if(caseNo == 1)
 		{
-			filename = "C:/StanfordRepo/CONRAD/src/edu/stanford/rsl/tutorial/dmip/undistorted.jpg";
+			filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/undistorted.jpg";
 		}else if(caseNo == 2)
 		{
-			filename = "C:/StanfordRepo/CONRAD/src/edu/stanford/rsl/tutorial/dmip/frame90.jpg";
+			filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/frame90.jpg";
 		}
 				
 		Grid2D image = ImageUtil.wrapImagePlus(IJ.openImage(filename)).getSubGrid(0);
@@ -161,8 +161,8 @@ public class ImageUndistortion{
 		// Number of lattice points
 		// TODO: define the number of lattice points
 		// change the value of nx, ny
-		int nx = 0;
-		int ny = 0;
+		int nx = imSize;
+		int ny = imSize;
 		
 		// step size
 		// TODO: calculate the stepsize of the lattice points 

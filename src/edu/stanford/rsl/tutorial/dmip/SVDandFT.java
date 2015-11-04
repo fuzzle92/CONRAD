@@ -139,7 +139,7 @@ public class SVDandFT {
 		for (int i = 0; i < newRank; i++) {
 			mean += svd.getS().getElement(i, i);
 		}
-		mean = mean/newRank;
+		mean /= newRank;
 
 		// Create new Singular matrix
 		SimpleMatrix Slowrank = new SimpleMatrix(svd.getS().getRows(), svd.getS().getCols());
@@ -198,8 +198,8 @@ public class SVDandFT {
 
 		// get solution for b
 
-		A.inverse(InversionType.INVERT_SVD);
-		SimpleVector b = SimpleOperators.multiply(A, y);
+		SimpleMatrix Ainv = A.inverse(InversionType.INVERT_SVD);
+		SimpleVector b = SimpleOperators.multiply(Ainv, y);
 
 		LinearFunction lFunc = new LinearFunction();
 		lFunc.setM(b.getElement(0));
@@ -227,30 +227,27 @@ public class SVDandFT {
 		for (int i = 0; i < b.getCols(); i++) {
 			// i-th column of b contains a vector. First entry of M is x^2
 			// Setup measurement matrix M
-			// TODO
-			// TODO
-			// TODO
-			// TODO
+			 M.setElementValue(i, 0, Math.pow(b.getElement(0, i), 2.0f));
+			 M.setElementValue(i, 1, b.getElement(0, i) * b.getElement(1, i));
+			 M.setElementValue(i, 2, b.getElement(0, i) * b.getElement(1, i));
+			 M.setElementValue(i, 3, Math.pow(b.getElement(1, i), 2.0f));
 		}
 
 		// TASK: estimate the matrix A
 		// HINT: Nullspace
 		DecompositionSVD svd = new DecompositionSVD(M);
-		// TODO
-		// TODO
+		 SimpleVector a = svd.getV().getCol(svd.getV().getCols()-1);
 
 		// We need to reshape the vector back to the desired 2x2 matrix form
 		SimpleMatrix A = new SimpleMatrix(2, 2);
-		// TODO
-		// TODO
+		A.setColValue(0, a.getSubVec(0, 2));
+		A.setColValue(1, a.getSubVec(2, 2));
 
 		// check if Frobenius norm is 1.0
 		double normF = A.norm(MatrixNormType.MAT_NORM_FROBENIUS);
 		System.out.println("||A||_F = " + normF);
 
 		// check solution
-SimpleVector a = new SimpleVector(4);
-a.ones();
 		SimpleVector temp = SimpleOperators.multiply(M, a);
 		double result = SimpleOperators.multiplyInnerProd(a, temp);
 		System.out.println("Minimized error: " + result);
@@ -285,13 +282,10 @@ a.ones();
 
 		// Create Rank k approximations
 		for (int k = 0; k < rank; k++) {
-//			SimpleMatrix Iapprox = new SimpleMatrix(image.getWidth(), image.getHeight());
-				SimpleVector ui = svd.getU().getCol(k);
-				SimpleVector vi = svd.getU().getCol(k);
-				SimpleMatrix uivi = SimpleOperators.multiplyOuterProd(ui, vi);
-				uivi.multiplyBy(svd.getS().getElement(k, k));
-				SimpleMatrix Iapprox= new SimpleMatrix(uivi);
-			
+
+			SimpleVector us = svd.getU().getCol(k).multipliedBy(svd.getSingularValues()[k]);
+			SimpleMatrix Iapprox = SimpleOperators.multiplyOuterProd(us, svd.getV().getCol(k));
+
 
 			// Transfer back to grid
 			Grid2D imageRank = new Grid2D(image.getWidth(), image.getHeight());
@@ -301,7 +295,7 @@ a.ones();
 						imageRank.setAtIndex(j, i, (float) Iapprox.getElement(i, j));
 					} else {
 						imageRank.setAtIndex(j, i, (float) Iapprox.getElement(i, j));
-						imageRank.addAtIndex(i, j, imageRanks.getAtIndex(i, j, k-1));
+						imageRank.addAtIndex(j, i, imageRanks.getAtIndex(j, i, k - 1));
 					}
 				}
 			}
@@ -317,42 +311,46 @@ a.ones();
 		Grid2D imageRankK = new Grid2D(image.getWidth(), image.getHeight());
 		for (int i = 0; i < image.getHeight(); i++) {
 			for (int j = 0; j < image.getWidth(); j++) {
-//				imageRankK.setAtIndex(j, i, (float) IapproxK.getElement(i, j));
+				// imageRankK.setAtIndex(j, i, (float) IapproxK.getElement(i,
+				// j));
 			}
 		}
-//		imageRankK.show();
+		// imageRankK.show();
 
 	}
 
-//	public static void fourierExercise(Grid2D image) {
-//		// TODO complex image
-//		// Important: Grid2DComplex enlarges the original image to the next
-//		// power of 2
-//		imageC.show();
-//
-//		// Apply 2-D discrete fourier transform
-//		// Puts the DC component of the signal in the upper left corner of the
-//		// FFT
-//		// TODO
-//		imageC.show("Shepp-Logan FFT");
-//
-//		// TODO
-//		imageC.show("Shepp-Logan FFTShift");
-//
-//		// Visualize log transformed FFT log(1+|FFTshift(image)|)
-//		Grid2D logFFT = new Grid2D(imageC.getMagnSubGrid(0, 0, imageC.getWidth(), imageC.getHeight()));
-//		logFFT.getGridOperator().addBy(logFFT, 1.f);
-//		logFFT.getGridOperator().log(logFFT);
-//		logFFT.show("Shepp-Logan FFTShift log");
-//
-//		// Important: Grid2DComplex enlarges the original image to the next
-//		// power of 2
-//		// When transforming back, make sure to prune the image size to your
-//		// original image
-//		// TODO inverse FFT
-//		// TODO prune
-//		imageTransf.show();
-//	}
+	public static void fourierExercise(Grid2D image) {
+		// TODO complex image
+		// Important: Grid2DComplex enlarges the original image to the next
+		// power of 2
+		Grid2DComplex imageC = new Grid2DComplex(image);
+		imageC.show();
+
+		// Apply 2-D discrete fourier transform
+		// Puts the DC component of the signal in the upper left corner of the
+		// FFT
+		// TODO
+		imageC.transformForward();
+		imageC.show("Shepp-Logan FFT");
+
+		// TODO
+		imageC.fftshift();
+		imageC.show("Shepp-Logan FFTShift");
+
+		// Visualize log transformed FFT log(1+|FFTshift(image)|)
+		Grid2D logFFT = new Grid2D(imageC.getMagnSubGrid(0, 0, imageC.getWidth(), imageC.getHeight()));
+		logFFT.getGridOperator().addBy(logFFT, 1.f);
+		logFFT.getGridOperator().log(logFFT);
+		logFFT.show("Shepp-Logan FFTShift log");
+
+		// Important: Grid2DComplex enlarges the original image to the next
+		// power of 2
+		// When transforming back, make sure to prune the image size to your
+		// original image
+		imageC.transformInverse();
+		Grid2D imageTransf = imageC.getMagnSubGrid(0, 0, image.getWidth(), image.getHeight());
+		imageTransf.show();
+	}
 
 	public static void main(String[] args) {
 
@@ -386,6 +384,7 @@ a.ones();
 
 		// Load an image from file
 		String filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/yu_fill.jpg";
+
 		Grid2D image = ImageUtil.wrapImagePlus(IJ.openImage(filename)).getSubGrid(0);
 		image.show();
 
@@ -402,13 +401,13 @@ a.ones();
 		// 5. Choose Shepp Logan Phantom
 		// 6. Save the resulting volume. In the ImageJ window, File-Save
 		// As->Tiff...
-int t = 0;
-//		String filenameShepp = "D:/04_lectures/DMIP/exercises/2014/1/shepplogan.tif";
-//		Grid3D sheppLoganVolume = ImageUtil.wrapImagePlus(IJ.openImage(filenameShepp));
-////		 To work with a 2-D image, select slice 160
-//		Grid2D sheppLoganImage = sheppLoganVolume.getSubGrid(160);
-//		sheppLoganImage.show();
-////		fourierExercise(sheppLoganImage);
+
+		String filenameShepp = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/Shepp-Logan Phantom.tif";
+		Grid3D sheppLoganVolume = ImageUtil.wrapImagePlus(IJ.openImage(filenameShepp));
+		// To work with a 2-D image, select slice 160
+		Grid2D sheppLoganImage = sheppLoganVolume.getSubGrid(160);
+		sheppLoganImage.show();
+		 fourierExercise(sheppLoganImage);
 
 	}
 
