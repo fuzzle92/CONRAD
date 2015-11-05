@@ -16,11 +16,11 @@ import ij.IJ;
 import ij.ImageJ;
 
 /**
- * 
- * Exercise 2 of Diagnostic Medical Image Processing (DMIP)
+ *Exercise 2 of Diagnostic Medical Image Processing (DMIP)
  * 
  * @author Marco Boegel
  *
+ *Exercise done by Peter Weisskopf
  */
 public class SVDandFT {
 
@@ -29,7 +29,6 @@ public class SVDandFT {
 		System.out.println("A = " + A.toString());
 
 		// Compute the inverse of A without using inverse()
-		// TODO
 		DecompositionSVD svd = new DecompositionSVD(A);
 
 		// Check output: re-compute A = U * S * V^T
