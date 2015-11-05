@@ -305,22 +305,23 @@ public class SVDandFT {
 		imageRanks.show();
 
 		// Direct estimation of rank K
-		// TODO
-		// TODO
+   SimpleMatrix us = SimpleOperators.multiplyMatrixProd(svd.getU().getSubMatrix(0,0,svd.getU().getRows(), rank), svd.getS().getSubMatrix(0,0,rank, rank));
+   SimpleMatrix IapproxK = SimpleOperators.multiplyMatrixProd(us, svd.getV().getSubMatrix(0,0, svd.getV().getRows(),rank).transposed());
+		
 		// Transfer back to grid
 		Grid2D imageRankK = new Grid2D(image.getWidth(), image.getHeight());
 		for (int i = 0; i < image.getHeight(); i++) {
 			for (int j = 0; j < image.getWidth(); j++) {
-				// imageRankK.setAtIndex(j, i, (float) IapproxK.getElement(i,
-				// j));
+				 imageRankK.setAtIndex(j, i, (float) IapproxK.getElement(i,
+				 j));
 			}
 		}
-		// imageRankK.show();
+		 imageRankK.show();
 
 	}
 
 	public static void fourierExercise(Grid2D image) {
-		// TODO complex image
+
 		// Important: Grid2DComplex enlarges the original image to the next
 		// power of 2
 		Grid2DComplex imageC = new Grid2DComplex(image);
@@ -329,11 +330,10 @@ public class SVDandFT {
 		// Apply 2-D discrete fourier transform
 		// Puts the DC component of the signal in the upper left corner of the
 		// FFT
-		// TODO
+
 		imageC.transformForward();
 		imageC.show("Shepp-Logan FFT");
 
-		// TODO
 		imageC.fftshift();
 		imageC.show("Shepp-Logan FFTShift");
 
@@ -383,7 +383,7 @@ public class SVDandFT {
 		optimizationProblem2(vectors);
 
 		// Load an image from file
-		String filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/yu_fill.jpg";
+		String filename = "/proj/i5dmip/zi74fuso/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/yu_fill.jpg";
 
 		Grid2D image = ImageUtil.wrapImagePlus(IJ.openImage(filename)).getSubGrid(0);
 		image.show();
@@ -402,7 +402,7 @@ public class SVDandFT {
 		// 6. Save the resulting volume. In the ImageJ window, File-Save
 		// As->Tiff...
 
-		String filenameShepp = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/Shepp-Logan Phantom.tif";
+		String filenameShepp = "/proj/i5dmip/zi74fuso/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/Shepp-Logan Phantom.tif";
 		Grid3D sheppLoganVolume = ImageUtil.wrapImagePlus(IJ.openImage(filenameShepp));
 		// To work with a 2-D image, select slice 160
 		Grid2D sheppLoganImage = sheppLoganVolume.getSubGrid(160);

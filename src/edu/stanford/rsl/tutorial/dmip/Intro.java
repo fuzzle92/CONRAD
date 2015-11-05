@@ -60,7 +60,7 @@ public class Intro {
 		copy.show("Copy of circle");
 
 		// Load an image from file
-		String filename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/mr12.dcm";
+		String filename = "/proj/i5dmip/zi74fuso/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/mr12.dcm";
 		// TODO. Hint: Use IJ and ImageUtil
 		// Grid2D imageDisk = ImageUtil.wrapImagePlus(IJ.openImage(filename));
 		Grid2D mrImage = ImageUtil.wrapImagePlus(IJ.openImage(filename)).getSubGrid(0);
@@ -81,7 +81,7 @@ public class Intro {
 		conv.convolve(imgProc, kernel, kw, kh);
 		mrImage.show();
 		// write an image to disk, check the supported output formats
-		String outFilename = "I:/Master/2. Semester/DMIP/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/mr12out.tif";
+		String outFilename = "/proj/i5dmip/zi74fuso/Reconstruction/CONRAD/src/edu/stanford/rsl/tutorial/dmip/mr12out.tif";
 		IJ.save(outFilename);
 	}
 
